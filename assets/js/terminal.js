@@ -356,7 +356,7 @@ function minimize() { root.classList.add('is-min'); }
 
 export function initTerminal() {
   document.body.insertAdjacentHTML('beforeend', `
-    <button class="term-launch" id="term-launch" type="button" aria-controls="term" aria-expanded="false"><span class="tl-dot"></span>›_ terminal <kbd>\\</kbd></button>
+    <button class="term-launch" id="term-launch" type="button" aria-label="Terminal" aria-controls="term" aria-expanded="false"><span class="tl-dot"></span>›_<span class="tl-word"> terminal</span> <kbd>\\</kbd></button>
     <section class="term" id="term" role="dialog" aria-label="Terminal" hidden>
       <header class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">ercontent77@osint: ~</span>
         <button type="button" class="term-btn" data-act="min" aria-label="Minimize terminal">_</button><button type="button" class="term-btn" data-act="close" aria-label="Close terminal">×</button></header>

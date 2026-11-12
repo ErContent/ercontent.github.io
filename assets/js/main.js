@@ -132,7 +132,7 @@ function globe() {
     DOTS.push([Math.asin(y) / rad, Math.atan2(Math.sin(th) * r, Math.cos(th) * r) / rad]);
   }
   let target = null, amp = 38;
-  let drift = 0, base = -NAPLES[1] - 8, lon0 = base, lat0 = 26, W = 0, R = 0, dpr = 1, running = true, drag = null, last = performance.now();
+  let drift = 0, base = -NAPLES[1] - 8, lon0 = base, lat0 = 26, W = 0, R = 0, dpr = 1, running = true, drag = null, last = performance.now(), loopId = 0;
   const arcs = [];
   let sites = [];
   // coastlines (Natural Earth 50m via world-atlas, simplified): [cosφ, sinφ, λ] per point
@@ -177,6 +177,7 @@ function globe() {
   const spawn = () => { const t = AWAY[(Math.random() * AWAY.length) | 0]; arcs.push({ from: [t.lat, t.lon], t: 0, speed: 0.004 + Math.random() * 0.004 }); };
 
   const draw = (now) => {
+    loopId = 0;
     const dt = Math.min(50, now - last); last = now;
     if (hover && hoverByTap && now - lastHover > 2500) { hover = null; hoverByTap = false; }
     if (!drag && !target && !hover && !inside) {
@@ -274,11 +275,12 @@ function globe() {
         ctx.fillText(`TARGET ${target.lat.toFixed(4)}, ${target.lon.toFixed(4)}`, t.x + r + 8, t.y + r + 14);
       }
     }
-    if (running && !REDUCED) requestAnimationFrame(draw);
+    if (running && !REDUCED && !loopId) loopId = requestAnimationFrame(draw);
   };
   resize();
   addEventListener('resize', resize);
-  new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting; if (running && !was && !REDUCED) { last = performance.now(); requestAnimationFrame(draw); } }).observe(cv);
+  // loopId guards against a second loop when the globe leaves and re-enters view between two frames
+  new IntersectionObserver(([e]) => { running = e.isIntersecting; if (running && !REDUCED && !loopId) { last = performance.now(); loopId = requestAnimationFrame(draw); } }).observe(cv);
   cv.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, lon0, lat0 }; cv.setPointerCapture(e.pointerId); });
   cv.addEventListener('pointermove', (e) => {
     if (drag) return;
@@ -291,7 +293,8 @@ function globe() {
     else if (!tip.hidden && !hoverByTap) tip.hidden = true;
   });
   cv.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { inside = true; if (!hover) tip.hidden = true; } });
-  cv.addEventListener('pointerleave', () => { inside = false; hover = null; lastHover = performance.now(); tip.hidden = true; });
+  // touch fires pointerleave right after every tap: only a mouse leaving the globe closes the card
+  cv.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'mouse') return; inside = false; hover = null; lastHover = performance.now(); tip.hidden = true; });
   cv.addEventListener('pointermove', (e) => { if (!drag || drag.lock) return; lon0 = drag.lon0 + (e.clientX - drag.x) * 0.3; lat0 = Math.max(-60, Math.min(70, drag.lat0 + (e.clientY - drag.y) * 0.3)); if (REDUCED) draw(performance.now()); });
   const end = (e) => {
     if (drag && !drag.lock) {
@@ -318,7 +321,7 @@ function globe() {
   });
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
   if (!REDUCED) { for (let i = 0; i < 4; i++) { spawn(); arcs[i].t = Math.random() * 0.8; } }
-  requestAnimationFrame(draw);
+  loopId = requestAnimationFrame(draw);
 }
 
 /* ---------- Hero: reticle that reads coordinates ---------- */
@@ -463,16 +466,18 @@ function board() {
   // data packets running on the strings
   function packets() {
     const pk = edgeEls.map((p) => ({ p, t: Math.random(), v: 0.0025 + Math.random() * 0.003, c: svgEl('circle', { class: 'packet', r: 2.6 }, gPk) }));
-    let vis = true;
-    new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) requestAnimationFrame(run); }).observe(svg);
+    let vis = true, id = 0;
+    // id guards against a second loop when the board leaves and re-enters view between two frames
+    new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis && !id) id = requestAnimationFrame(run); }).observe(svg);
     function run() {
+      id = 0;
       for (const k of pk) {
         k.t = (k.t + k.v) % 1;
         const pt = k.p.getPointAtLength(k.t * +k.p.dataset.len);
         k.c.setAttribute('cx', pt.x); k.c.setAttribute('cy', pt.y);
         k.c.style.opacity = svg.classList.contains('has-active') && !k.p.classList.contains('is-linked') ? 0 : 1;
       }
-      if (vis) requestAnimationFrame(run);
+      if (vis) id = requestAnimationFrame(run);
     }
   }
 

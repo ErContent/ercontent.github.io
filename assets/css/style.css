@@ -385,6 +385,8 @@ body.room-open { overflow: hidden; }
 }
 @media (max-width: 960px) {
   .globe { right: -30vw; width: 110vw; opacity: .55; }
+  /* the globe sits behind the headline here: let taps on the text reach the trophy markers */
+  .hero-inner > .cmd, .hero-inner > h1, .hero-inner > .lede { pointer-events: none; }
   .board-layout, .match-layout, .room-body { grid-template-columns: 1fr; }
   .profile { grid-template-columns: 1fr; }
   .scan-frame { max-width: 280px; }
@@ -743,3 +745,26 @@ button.live.off::before { background: var(--dim); animation: none; }
 }
 @keyframes dogmaIn { from { opacity: 0; transform: scale(1.04); } }
 @media (prefers-reduced-motion: reduce) { .dogma-plate { animation: none; } }
+
+/* ---------- Touch screens ---------- */
+@media (pointer: coarse) {
+  /* iOS zooms into any input under 16px on focus */
+  .term-in { font-size: 16px; }
+  .term-launch kbd { display: none; }
+  /* tap targets of at least ~40px */
+  button.live { min-height: 32px; padding: 0 8px; }
+  .coord, .linkish, .room-back, .evidence a, .evidence button, .st-meta button { display: inline-flex; align-items: center; min-height: 40px; }
+  .room-back { white-space: nowrap; }
+  .feed-open { min-height: 36px; }
+  /* bigger hit area for the logo link without moving the header */
+  .brand { padding-block: 12px; margin-block: -12px; }
+}
+/* phones (portrait or landscape): the floating terminal button shrinks to its icon so it covers less of the page */
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  .term-launch .tl-word { display: none; }
+  .term-launch { min-width: 48px; min-height: 48px; justify-content: center; }
+}
+/* phones in landscape: keep the whole pitch (and its controls) below the sticky header */
+@media (orientation: landscape) and (max-height: 500px) {
+  #stadium-cv { aspect-ratio: auto; height: max(240px, calc(100svh - 76px)); }
+}

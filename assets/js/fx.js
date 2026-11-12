@@ -33,10 +33,13 @@ export function scramble(el, { duration = 800, chars = null, lock = false, resta
     unlock = () => { Object.assign(el.style, prev); unlocks.delete(el); };
     unlocks.set(el, unlock);
   }
-  const t0 = performance.now();
+  // progress advances at most 50 ms per frame: after a stall the effect resumes where it was
+  // instead of freezing on random letters and snapping to the end
+  let elapsed = 0, prev = performance.now();
   return new Promise((res) => {
     const f = (now) => {
-      const p = Math.min(1, (now - t0) / duration);
+      elapsed += Math.min(50, Math.max(0, now - prev)); prev = now;
+      const p = Math.min(1, elapsed / duration);
       const fixed = Math.floor(p * final.length);
       let out = final.slice(0, fixed);
       for (let i = fixed; i < final.length; i++) {

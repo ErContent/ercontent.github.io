@@ -38,7 +38,8 @@ export function initStadium() {
   const host = $('#stadium');
   if (!host) return;
   paintEvidence($('#st-ev-list'), load());
-  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); boot(host); } }, { rootMargin: '300px' });
+  // start well before the section is on screen, so its heading animation doesn't overlap the setup
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); boot(host); } }, { rootMargin: '900px' });
   io.observe(host);
 }
 
@@ -85,6 +86,11 @@ async function boot(host) {
     const panel = new THREE.Mesh(new THREE.BoxGeometry(5, 2.6, 0.6), new THREE.MeshBasicMaterial({ color: 0xdff3ff }));
     panel.position.set(x * 1.02, 38.5, z * 1.02); panel.lookAt(0, 0, 0); scene.add(panel);
   }
+
+  // The setup is split into short steps with a painted frame in between:
+  // one long block froze every other animation on the page (e.g. the heading scramble).
+  const breathe = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+  await breathe();
 
   /* ---------- Pitch texture ---------- */
   const PX = 20, tc = document.createElement('canvas');
@@ -162,6 +168,8 @@ async function boot(host) {
   const KEEP0 = new THREE.Vector3(GOAL_X - 0.4, 0, 0);
   keeper.position.copy(KEEP0); scene.add(keeper);
 
+  await breathe();
+
   /* ---------- Clues ---------- */
   const clueMeshes = CLUES.map((c) => {
     const k = document.createElement('canvas'); k.width = 1024; k.height = 384;
@@ -180,6 +188,8 @@ async function boot(host) {
     scene.add(m);
     return m;
   });
+
+  await breathe();
 
   /* ---------- Stands: a dark bowl dotted with phone lights ---------- */
   const sc = document.createElement('canvas'); sc.width = 2048; sc.height = 256;
@@ -202,6 +212,8 @@ async function boot(host) {
   aim.rotation.y = -Math.PI / 2; aim.visible = false; aim.renderOrder = 10; scene.add(aim);
   const goalPlane = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), new THREE.MeshBasicMaterial({ visible: false }));
   goalPlane.rotation.y = -Math.PI / 2; goalPlane.position.set(GOAL_X, 3, 0); scene.add(goalPlane);
+
+  await breathe();
 
   /* ---------- Camera rigs ---------- */
   const VIEWS = {
@@ -379,11 +391,13 @@ async function boot(host) {
   }
 
   /* ---------- Loop ---------- */
-  let visible = true, last = performance.now();
-  new IntersectionObserver(([e]) => { const was = visible; visible = e.isIntersecting; if (visible && !was) requestAnimationFrame(loop); }).observe(host);
+  let visible = true, last = performance.now(), raf = 0;
+  // single loop guard: a quick out-and-back scroll used to start a second loop (double rendering)
+  const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } };
   const tmp = new THREE.Vector3();
 
   function loop(now) {
+    raf = 0;
     const dt = Math.min(50, now - last); last = now;
     if (tween) tween(now);
     for (let i = anims.length - 1; i >= 0; i--) {
@@ -428,8 +442,14 @@ async function boot(host) {
         dwell = { id: null, t: 0 };
       }
     }
-    if (visible) requestAnimationFrame(loop);
+    if (visible) raf = requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+
+  // upload the big textures and compile shaders before the first frame, one step per frame
+  for (const t of [pitchTex, standTex, ballTex, lt, nt, ...clueMeshes.map((m) => m.material.map)]) { renderer.initTexture(t); await breathe(); }
+  for (const [s, c] of [[scene, cam], [scene, lensCam], [overlay, ocam]]) { await renderer.compileAsync(s, c).catch(() => {}); await breathe(); }
+
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(host);
+  start();
   host.classList.add('ready');
 }
