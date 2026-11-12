@@ -1,0 +1,5 @@
+# Keep LF everywhere (the site is served as-is by GitHub Pages; case files must stay byte-identical).
+* text=auto eol=lf
+*.png binary
+*.pdf binary
+*.woff2 binary

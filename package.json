@@ -1,0 +1,11 @@
+{
+  "name": "ercontent77-site",
+  "private": true,
+  "type": "module",
+  "description": "Static site for GitHub Pages. Node is only needed for the case build and the tests.",
+  "scripts": {
+    "build:cases": "node tools/build-cases.mjs ../osint-cases-private",
+    "test": "node tools/test/run.mjs ../osint-cases-private",
+    "test:release": "node tools/test/run.mjs ../osint-cases-private --release"
+  }
+}

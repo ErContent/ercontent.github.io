@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alessio Foggia</title>
+<meta name="description" content="Alessio Foggia, cyber security engineer from Naples. OSINT, GEOINT, digital forensics and penetration testing. Solve the open cases.">
+<meta name="author" content="Alessio Foggia">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Alessio Foggia: everything leaves a trace">
+<meta property="og:description" content="OSINT, GEOINT and offensive security from Naples. Open cases inside.">
+<meta property="og:url" content="https://ercontent.github.io/">
+<meta name="twitter:card" content="summary">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23000'/><circle cx='28' cy='28' r='13' fill='none' stroke='%231C9AD6' stroke-width='6'/><path d='M38 38l14 14' stroke='%231C9AD6' stroke-width='7' stroke-linecap='round'/></svg>">
+<link rel="preload" href="assets/fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+<script type="module" src="assets/js/main.js"></script>
+</head>
+<!--
+  Investigators read the source. Good.
+  Next stop: the file that tells crawlers where not to look.
+-->
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="progress"></span></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="brand" href="#top" aria-label="ErContent77, back to top"><span class="brand-dot" aria-hidden="true"></span>ErContent<span class="b77">77</span><span class="caret" aria-hidden="true">_</span></a>
+  <nav aria-label="Sections">
+    <a href="#subject" data-n="01">Subject</a>
+    <a href="#cases" data-n="02">Cases</a>
+    <a href="#stadium-sec" data-n="03">Pitch</a>
+    <a href="#board" data-n="04">Board</a>
+    <a href="#matchday" data-n="05">Matchday</a>
+    <a href="#log" data-n="06">Log</a>
+    <a href="#contact" data-n="07">Contact</a>
+  </nav>
+  <p class="clock" aria-hidden="true">NAP <span id="clock">--:--:--</span></p>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas class="globe" id="globe" aria-hidden="true"></canvas>
+  <div class="reticle" id="reticle" aria-hidden="true"><span class="r-lbl" id="r-lbl"></span></div>
+  <div class="hero-inner wrap">
+    <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="trace --target 40.85N,14.27E --since 1926">trace --target 40.85N,14.27E --since 1926</span></p>
+    <h1 id="hero-title" class="scramble">Everything leaves a trace.</h1>
+    <p class="lede">I’m Alessio Foggia, a cyber security engineer from Naples. I test systems the way an attacker would and investigate the way a detective does: <strong>OSINT</strong>, <strong>GEOINT</strong> and <strong>digital forensics</strong>.</p>
+    <div class="cta">
+      <a class="btn btn-solid" href="#subject"><span>Read the dossier</span></a>
+      <a class="btn btn-line" href="#cases"><span>Open the cases</span></a>
+    </div>
+    <div class="feed" role="log" aria-label="Sample investigation log" aria-live="off">
+      <div class="feed-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="feed-title">intel.feed</span><button type="button" class="live" aria-pressed="false" aria-label="Pause the live feed">live</button><button class="feed-open" type="button" data-open-terminal="help">open shell ›_</button></div>
+      <ol class="feed-body" id="feed"></ol>
+    </div>
+  </div>
+  <p class="hero-coords"><span class="tro-key" aria-hidden="true"></span> SSC Napoli trophy map: hover a marker on the globe</p>
+  <div class="globe-tip" id="globe-tip" role="status" aria-live="polite" hidden></div>
+  <a class="scroll-cue" href="#subject" aria-label="Scroll to the dossier"><span></span></a>
+</section>
+
+<!-- SUBJECT -->
+<section class="section" id="subject" aria-labelledby="subject-title">
+  <div class="sec-bg bg-subject" aria-hidden="true"><div class="bg-print" data-depth="-0.08"><svg class="bg-fp" viewBox="-300 -330 600 660" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" transform="rotate(-8)"><ellipse cx="0" cy="0" rx="27" ry="33.5" stroke-dasharray="151.9 12.5 73.7 22.5" stroke-dashoffset="29"/><ellipse cx="0" cy="0" rx="40" ry="49.0" stroke-dasharray="80.9 25.1 180.0 10.8" stroke-dashoffset="142"/><ellipse cx="0" cy="0" rx="53" ry="64.5" stroke-dasharray="128.3 16.0 159.2 6.6 174.0 9.5" stroke-dashoffset="48"/><ellipse cx="0" cy="0" rx="66" ry="80.0" stroke-dasharray="111.0 22.7 65.6 12.4 52.2 21.6 114.8 10.1 66.8 7.6" stroke-dashoffset="51"/><ellipse cx="0" cy="0" rx="79" ry="95.5" stroke-dasharray="137.6 24.0 123.3 16.8 54.0 22.0 139.0 10.2 86.0 7.8" stroke-dashoffset="147"/><ellipse cx="0" cy="0" rx="92" ry="111.0" stroke-dasharray="104.6 7.6 149.4 16.8 54.9 14.9 148.8 17.0 57.0 24.7 47.9 22.9" stroke-dashoffset="103"/><ellipse cx="0" cy="0" rx="105" ry="126.5" stroke-dasharray="145.1 24.9 114.3 10.4 106.1 20.8 147.6 13.7 172.6 6.7" stroke-dashoffset="126"/><ellipse cx="0" cy="0" rx="118" ry="142.0" stroke-dasharray="128.5 20.9 146.4 14.7 75.8 16.1 118.8 15.8 131.1 22.5 131.6 8.9" stroke-dashoffset="135"/><ellipse cx="0" cy="0" rx="131" ry="157.5" stroke-dasharray="52.9 22.9 168.1 24.5 145.1 17.5 48.7 15.6 146.5 21.1 43.7 6.2 52.3 24.5 55.9 13.8 106.6 23.7" stroke-dashoffset="34"/><ellipse cx="0" cy="0" rx="144" ry="173.0" stroke-dasharray="73.5 10.2 157.3 9.2 60.9 7.0 161.4 19.4 147.7 25.3 120.7 20.6 98.4 16.1 123.8 23.7" stroke-dashoffset="120"/><ellipse cx="0" cy="0" rx="157" ry="188.5" stroke-dasharray="127.0 11.9 78.7 15.1 66.5 17.8 49.9 6.4 59.8 7.8 163.0 16.2 135.0 21.6 63.1 25.0 93.8 15.2 108.4 19.9" stroke-dashoffset="196"/><ellipse cx="0" cy="0" rx="170" ry="204.0" stroke-dasharray="96.3 23.5 131.0 22.9 79.7 24.0 52.1 16.5 84.1 9.9 79.3 13.4 141.4 19.6 177.9 21.4 131.8 13.9 114.8 25.4" stroke-dashoffset="65"/><ellipse cx="0" cy="0" rx="183" ry="219.5" stroke-dasharray="93.0 20.9 118.7 20.1 83.3 7.6 134.5 8.9 90.3 21.6 46.9 24.2 122.4 17.2 134.8 7.1 43.1 20.4 122.1 18.8 155.2 11.4" stroke-dashoffset="41"/><ellipse cx="0" cy="0" rx="196" ry="235.0" stroke-dasharray="131.4 12.9 134.9 20.6 121.6 13.5 163.2 12.0 90.3 18.9 143.2 6.1 103.0 22.9 109.4 21.8 114.6 22.4 100.2 8.2" stroke-dashoffset="96"/><ellipse cx="0" cy="0" rx="209" ry="250.5" stroke-dasharray="149.3 6.8 149.9 22.1 154.5 24.7 128.6 22.5 116.0 19.4 49.8 17.0 178.6 13.8 140.1 9.6 107.4 16.8 147.7 12.4" stroke-dashoffset="120"/><ellipse cx="0" cy="0" rx="222" ry="266.0" stroke-dasharray="72.2 15.7 101.1 17.3 143.3 23.4 149.7 14.0 53.5 21.7 131.8 18.9 130.1 12.6 175.1 14.6 110.4 13.1 130.0 11.1 151.5 24.8 88.3 8.9" stroke-dashoffset="67"/><ellipse cx="0" cy="0" rx="235" ry="281.5" stroke-dasharray="113.8 14.9 82.3 10.8 171.9 15.6 135.4 11.6 64.2 6.2 81.4 14.4 113.0 18.3 136.8 23.5 152.3 19.7 152.7 16.8 106.2 24.3 165.1 13.7" stroke-dashoffset="141"/><ellipse cx="0" cy="0" rx="248" ry="297.0" stroke-dasharray="100.1 21.0 43.4 17.9 172.6 14.8 161.9 19.6 42.9 7.5 86.3 25.4 132.0 18.0 160.4 13.0 60.5 14.9 167.1 9.3 109.0 11.9 90.0 7.8 167.0 11.1 150.5 9.5" stroke-dashoffset="109"/></g></svg></div><div class="bg-lens-wrap" data-depth="0.12"><svg class="bg-lens" viewBox="0 0 400 400" aria-hidden="true"><g fill="none" stroke="currentColor"><circle cx="160" cy="160" r="120" stroke-width="10"/><circle cx="160" cy="160" r="104" stroke-width="2" opacity=".5"/><path d="M146 92a74 74 0 0 1 70 30" stroke-width="6" stroke-linecap="round" opacity=".6"/><path d="M247 247l110 110" stroke-width="30" stroke-linecap="round"/></g></svg></div></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="whois ErContent77">whois ErContent77</span></p>
+      <h2 id="subject-title" class="scramble">Subject profile</h2>
+    </header>
+    <article class="profile reveal" aria-label="Subject dossier">
+      <div class="scan-frame" aria-hidden="true">
+        <svg viewBox="0 0 200 240" class="silhouette"><circle cx="100" cy="82" r="44"/><path d="M22 240c4-62 38-96 78-96s74 34 78 96z"/></svg>
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <span class="scanbar"></span>
+        <p class="match"><span>Match</span> <strong id="match">00.0%</strong></p>
+      </div>
+      <div class="profile-body">
+        <p class="file-no">File no. 081 / Napoli / <time id="dossier-date">today</time></p>
+        <dl class="fields" id="fields">
+          <div><dt>Subject</dt><dd>Alessio Foggia</dd></div>
+          <div><dt>Known as</dt><dd>ErContent77</dd></div>
+          <div><dt>Occupation</dt><dd>Cyber security engineer</dd></div>
+          <div><dt>Specialty</dt><dd>OSINT, GEOINT, digital forensics</dd></div>
+          <div><dt>Base</dt><dd>Napoli, 40.85&nbsp;N 14.27&nbsp;E</dd></div>
+          <div><dt>Team</dt><dd>napwnli, CTF</dd></div>
+          <div><dt>Allegiance</dt><dd><span class="redact" tabindex="0" aria-label="Redacted. Focus to reveal.">SSC Napoli, since birth</span></dd></div>
+          <div><dt>Weakness</dt><dd><span class="redact" tabindex="0" aria-label="Redacted. Focus to reveal.">a clue left unsolved</span></dd></div>
+        </dl>
+        <p class="hint">Hover or tap the bars to declassify.</p>
+        <div class="stamp" aria-label="Status: active">Active</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="section" id="cases" aria-labelledby="cases-title">
+  <div class="sec-bg bg-cases" aria-hidden="true"><canvas class="bg-map" id="bg-map"></canvas><span class="bg-qmark" data-depth="0.1">?</span></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="ls -la ./cases">ls -la ./cases</span></p>
+      <h2 id="cases-title" class="scramble">Open cases</h2>
+      <p class="section-sub">Investigations I wrote. Solve one and the next file decrypts. No scoreboard and no write-up: just you and the evidence.</p>
+    </header>
+    <ol class="case-list" id="case-list" aria-live="polite">
+      <li class="case-row is-loading"><span class="case-n">···</span><span class="case-title">Decrypting the archive</span></li>
+    </ol>
+    <p class="cases-foot">Progress is saved in this browser only. <button class="linkish" id="reset-progress" type="button">Reset my progress</button></p>
+  </div>
+</section>
+
+<!-- STADIUM -->
+<section class="section" id="stadium-sec" aria-labelledby="stadium-title">
+  <div class="sec-bg bg-stadium" aria-hidden="true"><span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="./stadium --night --opponent ErContent">./stadium --night --opponent ErContent</span></p>
+      <h2 id="stadium-title" class="scramble">Night match</h2>
+      <p class="section-sub">Two games on one pitch. Sweep the grass with the lens to find what was left behind, then take penalties against ErContent. Some spots in the goal pay more than others.</p>
+    </header>
+  </div>
+  <div class="stadium reveal" id="stadium" data-mode="lens">
+    <canvas id="stadium-cv" tabindex="0" aria-label="3D football pitch. Lens mode: move to inspect the grass. Shoot mode: aim with the arrow keys, Enter to shoot."></canvas>
+    <div class="lens" id="lens" aria-hidden="true"><span class="lens-ring"></span><span class="lens-x"></span></div>
+    <div class="st-top">
+      <div class="st-modes" role="group" aria-label="Mode">
+        <button type="button" data-mode="lens" aria-pressed="true"><span aria-hidden="true">⌕</span> Lens</button>
+        <button type="button" data-mode="shoot" aria-pressed="false"><span aria-hidden="true">◉</span> Shoot</button>
+      </div>
+      <div class="st-score" role="status" aria-label="Score">
+        <span class="st-team">Tu</span><b id="sc-tu">0</b><i>:</i><b id="sc-er">0</b><span class="st-team er">ErContent</span>
+      </div>
+      <div class="st-meta"><span>pts <b id="sc-pts">0</b></span><span>evidence <b id="sc-ev">0/5</b></span><button type="button" id="st-reset">reset score</button></div>
+    </div>
+    <p class="st-call" id="st-call" aria-live="polite">Sweep the pitch with the lens. Some things only show up up close.</p>
+  </div>
+  <div class="wrap">
+    <div class="st-ev-head">
+      <h3>Evidence bag</h3>
+      <p>Five clues are hidden on the grass, invisible to the naked eye. Each slot fills up when you hold the lens over one. Some help you beat ErContent, others point somewhere else.</p>
+    </div>
+    <ol class="st-ev" id="st-ev-list" aria-label="Evidence found on the pitch"></ol>
+  </div>
+</section>
+
+<!-- BOARD -->
+<section class="section" id="board" aria-labelledby="board-title">
+  <div class="sec-bg bg-board" aria-hidden="true" data-depth="0.06"><svg class="bg-strings" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#E5383B" stroke-width="1.5"><path d="M80,120 Q210.0,130.0 340,60"/><path d="M340,60 Q480.0,160.0 620,180"/><path d="M620,180 Q760.0,175.0 900,90"/><path d="M900,90 Q1040.0,190.0 1180,210"/><path d="M80,120 Q140.0,310.0 200,420"/><path d="M200,420 Q360.0,440.0 520,380"/><path d="M520,380 Q570.0,320.0 620,180"/><path d="M520,380 Q690.0,460.0 860,460"/><path d="M860,460 Q990.0,470.0 1120,400"/><path d="M1120,400 Q1150.0,345.0 1180,210"/><path d="M1180,210 Q1270.0,295.0 1360,300"/><path d="M860,460 Q880.0,315.0 900,90"/><path d="M340,60 Q430.0,260.0 520,380"/></g><g fill="#E5383B"><circle cx="80" cy="120" r="3.5"/><circle cx="340" cy="60" r="3.5"/><circle cx="620" cy="180" r="3.5"/><circle cx="900" cy="90" r="3.5"/><circle cx="1180" cy="210" r="3.5"/><circle cx="200" cy="420" r="3.5"/><circle cx="520" cy="380" r="3.5"/><circle cx="860" cy="460" r="3.5"/><circle cx="1120" cy="400" r="3.5"/><circle cx="1360" cy="300" r="3.5"/></g></svg></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="graph --render links.board">graph --render links.board</span></p>
+      <h2 id="board-title" class="scramble">The board</h2>
+      <p class="section-sub">Link analysis of what I do. Pick a node to follow the strings and the evidence behind it.</p>
+    </header>
+    <div class="board-layout reveal">
+      <div class="board-frame">
+        <svg id="board-svg" class="board" viewBox="0 0 1000 620" role="group" aria-label="Link analysis graph of skills and research"></svg>
+        <span class="frame-tag" aria-hidden="true">nodes 12 / links 17</span>
+      </div>
+      <aside class="board-note" id="board-note" aria-live="polite">
+        <h3>Start anywhere</h3>
+        <p>OSINT sits in the middle because it’s where most of my work begins: a name, a photo, a place. Everything else is a thread pulled from there.</p>
+      </aside>
+    </div>
+
+    <h3 class="sub reveal" id="exhibits-title">Exhibits</h3>
+    <ol class="exhibits" aria-labelledby="exhibits-title">
+      <li class="reveal" data-tags="sbd"><span class="ex-id">A</span><div><p class="ex-title">GenioSim: a novel simulation platform for edge computing over optical networks</p><p class="ex-meta">Future Generation Computer Systems, 2025, under review</p></div></li>
+      <li class="reveal" data-tags="sbd"><span class="ex-id">B</span><div><p class="ex-title"><a href="https://doi.org/10.48550/arXiv.2505.00111" rel="noopener">Security-by-design at the telco edge with OSS: challenges and lessons learned</a></p><p class="ex-meta">IEEE/IFIP DSN 2025, supplemental volume</p></div></li>
+      <li class="reveal" data-tags="sbd"><span class="ex-id">C</span><div><p class="ex-title">GENIO: synergizing edge computing with optical network infrastructures</p><p class="ex-meta">IEEE Communications Magazine, 2025, journal Q1</p></div></li>
+      <li class="reveal" data-tags="aicode"><span class="ex-id">D</span><div><p class="ex-title"><a href="https://doi.org/10.1016/j.jss.2024.112113" rel="noopener">Automating the correctness assessment of AI-generated code for security contexts</a></p><p class="ex-meta">Journal of Systems and Software, vol. 216, 2024, journal Q1</p></div></li>
+      <li class="reveal" data-tags="ml"><span class="ex-id">E</span><div><p class="ex-title"><a href="https://doi.org/10.1109/ICC45855.2022.9838942" rel="noopener">Data poisoning attacks against autoencoder-based anomaly detection models: a robustness analysis</a></p><p class="ex-meta">IEEE ICC 2022</p></div></li>
+      <li class="reveal" data-tags="aicode"><span class="ex-id">F</span><div><p class="ex-title">Security testing of AI code generators</p><p class="ex-meta">Master’s thesis, University of Naples Federico II, 2023</p></div></li>
+      <li class="reveal" data-tags="teach"><span class="ex-id">G</span><div><p class="ex-title">Informatica avanzata per i concorsi pubblici</p><p class="ex-meta">Book, Edizioni Simone, 352 pages, ISBN 978-88-914-4075-4</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- MATCHDAY -->
+<section class="section" id="matchday" aria-labelledby="match-title">
+  <div class="sec-bg bg-matchday" aria-hidden="true"><span class="bg-77" data-depth="0.18">77</span><span class="bg-77 small" data-depth="-0.1">77</span></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="./matchday --team napwnli">./matchday --team napwnli</span></p>
+      <h2 id="match-title" class="scramble">Matchday</h2>
+      <p class="section-sub">napwnli is the CTF team of the University of Naples Federico II, founded in 2024 by the Naples finalists of CyberChallenge.IT. I play as the team’s investigator: OSINT and digital forensics.</p>
+    </header>
+
+    <div class="scoreboard reveal" role="group" aria-label="Team record">
+      <div class="sb-cell"><span class="sb-num" data-final="2024">2024</span><span class="sb-lbl">Kick-off in Naples</span></div>
+      <div class="sb-cell"><span class="sb-num" data-final="1st">1st</span><span class="sb-lbl">CyberCup.IT 2025, junior</span></div>
+      <div class="sb-cell"><span class="sb-num" data-final="#13">#13</span><span class="sb-lbl">Italy on CTFtime, 2026</span></div>
+    </div>
+
+    <div class="match-layout">
+      <figure class="pitch-fig reveal">
+        <svg id="pitch" class="pitch" viewBox="0 0 680 440" role="group" aria-label="Team formation by CTF category"></svg>
+        <figcaption id="pitch-cap">Tap a player to see the role.</figcaption>
+      </figure>
+      <div class="match-copy reveal">
+        <h3>Same crest, different pitch</h3>
+        <p>Our crest is a donkey. So is Napoli’s historic mascot, ’o&nbsp;ciuccio. We don’t believe in coincidences: we investigate them.</p>
+        <p>A CTF plays like a match. Web and pwn push forward, crypto and reversing build the play, and in Attack/Defense someone has to keep the goal clean while the services stay up. My shirt is the number 77, Kvara’s number, on the left wing: in OSINT you cut inside and finish what the others started.</p>
+        <ul class="team-links">
+          <li><a href="https://napwn.li" rel="noopener">napwn.li</a></li>
+          <li><a href="https://ctftime.org/team/308814" rel="noopener">CTFtime</a></li>
+          <li><a href="https://github.com/napwnli" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.instagram.com/napwnli" rel="noopener">Instagram</a></li>
+          <li><a href="https://it.linkedin.com/company/napwnli" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOG -->
+<section class="section" id="log" aria-labelledby="log-title">
+  <div class="sec-bg bg-log" aria-hidden="true"><div class="bg-ruler"><span style="left:0%">00:00</span><span style="left:5%">00:30</span><span style="left:10%">01:00</span><span style="left:15%">01:30</span><span style="left:20%">02:00</span><span style="left:25%">02:30</span><span style="left:30%">03:00</span><span style="left:35%">03:30</span><span style="left:40%">04:00</span><span style="left:45%">04:30</span><span style="left:50%">05:00</span><span style="left:55%">05:30</span><span style="left:60%">06:00</span><span style="left:65%">06:30</span><span style="left:70%">07:00</span><span style="left:75%">07:30</span><span style="left:80%">08:00</span><span style="left:85%">08:30</span><span style="left:90%">09:00</span><span style="left:95%">09:30</span><span style="left:100%">10:00</span></div><span class="bg-scan"></span><span class="bg-tc" data-depth="0.1">REC ● 00:00:77</span></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="tail -n 7 case.log">tail -n 7 case.log</span></p>
+      <h2 id="log-title" class="scramble">Case log</h2>
+      <p class="section-sub">Where I’ve worked, studied and taught. Pick a point on the line, or use the arrow keys.</p>
+    </header>
+    <div class="htl" id="htl">
+      <div class="htl-scroll">
+        <div class="htl-rail" aria-hidden="true"><span class="htl-fill" id="htl-fill"></span></div>
+        <ol class="htl-track" role="tablist" aria-label="Career timeline">
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-0" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="0"><span class="htl-year">2023</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">MSc, 110/110 cum laude</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-1" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="1"><span class="htl-year">2023</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">Research: APT emulation</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-2" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="2"><span class="htl-year">2024</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">Research: GENIO</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-3" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="3"><span class="htl-year">2024</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">CyberChallenge.IT tutor</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-4" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="4"><span class="htl-year">2024</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">napwnli</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-5" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="5"><span class="htl-year">2025</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">Clanto Services</span></button></li>
+        <li role="presentation"><button type="button" role="tab" id="htl-tab-6" aria-controls="htl-panel" aria-selected="false" tabindex="-1" data-i="6"><span class="htl-year">2026</span><span class="htl-dot" aria-hidden="true"></span><span class="htl-label">Expert technician</span></button></li>
+        </ol>
+      </div>
+      <div class="htl-panel" id="htl-panel" role="tabpanel" aria-live="polite">
+        <div class="htl-body" id="htl-body"></div>
+        <div class="htl-nav">
+          <span class="htl-count" id="htl-count"></span>
+          <button type="button" class="htl-btn" id="htl-prev" aria-label="Previous entry">←</button>
+          <button type="button" class="htl-btn" id="htl-next" aria-label="Next entry">→</button>
+        </div>
+      </div>
+      <div class="htl-data" id="htl-data">
+      <article data-i="0"><time>July 2023</time><h3>MSc in Computer Engineering, 110/110 cum laude</h3><p>University of Naples Federico II. Thesis: security testing of AI code generators.</p></article>
+      <article data-i="1"><time>2023 to 2024</time><h3>Research fellow, University of Naples Federico II</h3><p>Federated learning for generative emulation of APTs: LLMs to produce synthetic attack data, accuracy of AI-generated code in security contexts, hardening against advanced attacks.</p></article>
+      <article data-i="2"><time>2024 to 2025</time><h3>Research fellow, University of Naples Federico II</h3><p>GENIO, an edge cloud platform on GPON networks designed security-by-design: vulnerability analysis in critical domains and secure configuration of reused components.</p></article>
+      <article data-i="3"><time>2024 to 2026</time><h3>CyberChallenge.IT tutor, Naples team</h3><p>Ethical hacking, software and network security. Hands-on sessions and preparation for the national competition.</p></article>
+      <article data-i="4"><time>2024, now</time><h3>CTF player, napwnli</h3><p>National and international competitions, specializing in OSINT and forensics challenges.</p></article>
+      <article data-i="5"><time>2025, now</time><h3>Cyber security engineer, Clanto Services</h3><p>Internal, external and web application penetration testing against the OWASP Top 10. End-to-end red teaming and targeted phishing campaigns. Vulnerability assessment with Nessus and OpenVAS, from scan to prioritized report. Hardening of Windows, Linux and Docker, endpoint protection and DLP.</p></article>
+      <article data-i="6"><time>2026</time><h3>Cybersecurity expert technician, Multicenter School</h3><p>Professional training course with a qualification recognized by Regione Campania.</p></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="sec-bg bg-contact" aria-hidden="true"><span class="radar r1"></span><span class="radar r2"></span><span class="radar r3"></span><span class="radar r4"></span><span class="sweep"></span></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="nc -lv ErContent77 443">nc -lv ErContent77 443</span></p>
+      <h2 id="contact-title" class="scramble">Open a channel</h2>
+      <p class="section-sub">For collaborations, CTFs or a case you can’t crack.</p>
+    </header>
+    <ul class="channels reveal">
+      <li><a href="https://www.linkedin.com/in/alessio-foggia-298561356/" rel="noopener" data-scramble>LinkedIn</a></li>
+      <li><a href="https://github.com/ErContent" rel="noopener" data-scramble>GitHub</a></li>
+      <li><a href="https://napwn.li" rel="noopener" data-scramble data-team aria-haspopup="dialog">napwnli</a></li>
+    </ul>
+    <h3 class="sub reveal" id="platforms-title">Find me on</h3>
+    <ul class="platforms reveal" aria-labelledby="platforms-title">
+      <li><a href="https://tryhackme.com/p/ErContent77" rel="noopener"><span class="pf-name">TryHackMe</span><span class="pf-what">Rooms and paths</span></a></li>
+      <li><a href="https://ctf.osint.industries/users/7889" rel="noopener"><span class="pf-name">OSINT Industries</span><span class="pf-what">Investigation platform</span></a></li>
+      <li><a href="https://it.osint4fun.eu/" rel="noopener"><span class="pf-name">OSINT4Fun</span><span class="pf-what">Challenges and community</span></a></li>
+      <li><a href="https://ctftime.org/team/308814" rel="noopener"><span class="pf-name">CTFtime</span><span class="pf-what">with napwnli</span></a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p class="signoff" lang="it"><span id="signoff" data-text="Io la ringrazio e le auguro il meglio.">Io la ringrazio e le auguro il meglio.</span><span class="caret" aria-hidden="true">_</span></p>
+  <p class="small">© <span id="year">2026</span> Alessio Foggia. No cookies, no trackers.</p>
+</footer>
+
+<!-- CASE ROOM -->
+<div class="room" id="room" role="dialog" aria-modal="true" aria-labelledby="room-title" hidden>
+  <div class="room-bar">
+    <a class="room-back" href="#cases">Back to cases</a>
+    <p class="room-id" id="room-id"></p>
+  </div>
+  <div class="room-body" id="room-body"></div>
+  <div class="decrypt" id="decrypt" aria-hidden="true" hidden><pre id="decrypt-rain"></pre><p id="decrypt-msg">Decrypting</p></div>
+</div>
+
+<!-- NAPWNLI -->
+<div class="teamdlg" id="teamdlg" role="dialog" aria-modal="true" aria-labelledby="teamdlg-title" hidden>
+  <div class="teamdlg-box">
+    <button type="button" class="term-btn teamdlg-close" id="teamdlg-close" aria-label="Close">×</button>
+    <figure class="teamdlg-logo"><img src="assets/img/napwnli.png" alt="napwnli logo: a grey donkey head next to the word NAPWNLI" width="401" height="140"></figure>
+    <h2 id="teamdlg-title" class="sr">napwnli</h2>
+    <div class="teamdlg-cols">
+      <section>
+        <h3>The story</h3>
+        <p>napwnli is the CTF team of the University of Naples Federico II. It was born in 2024 from the Naples finalists of CyberChallenge.IT: students who didn’t want the competition to end with the national final.</p>
+        <p>We play CTFs all over the world: web, pwn, crypto, reversing, forensics, OSINT and Attack/Defense. I’m the investigator of the squad.</p>
+      </section>
+      <section>
+        <h3>The donkey</h3>
+        <p>Our crest is a donkey, like Napoli’s historic mascot, ’o&nbsp;ciuccio. The name is a pun too: <strong>Napoli</strong> + <strong>pwn</strong>, the word for taking control of a system.</p>
+        <p>We don’t believe in coincidences: we investigate them.</p>
+      </section>
+      <section>
+        <h3>Federico II</h3>
+        <p>We represent the University of Naples Federico II, founded in 1224, one of the oldest public universities in the world. We train in its labs and share what we learn with the next CyberChallenge.IT students.</p>
+      </section>
+    </div>
+    <p class="teamdlg-motto" id="teamdlg-motto">PROUD TO BE NAPWNLI</p>
+    <div class="teamdlg-links">
+      <a class="btn btn-solid" href="https://napwn.li" rel="noopener"><span>Visit napwn.li</span></a>
+      <a class="btn btn-line" href="https://ctftime.org/team/308814" rel="noopener"><span>CTFtime</span></a>
+      <a class="btn btn-line" href="#matchday" data-close><span>See the formation</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="assertive" hidden></div>
+</body>
+</html>

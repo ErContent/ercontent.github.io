@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Nothing to see here.
+Disallow: /evidence/

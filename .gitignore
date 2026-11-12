@@ -1,0 +1,6 @@
+# Private case sources and answers must never reach the public repository.
+cases-src/
+*-private/
+cases.config.mjs
+node_modules/
+.DS_Store
