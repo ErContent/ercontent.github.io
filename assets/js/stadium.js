@@ -8,24 +8,83 @@ const GOAL_X = 52.5, GW = 7.32, GH = 2.44, SPOT_X = 41.5;
 
 // Clues live on render layer 1: only the lens camera sees them until they are found.
 const CLUES = [
-  { id: 'c1', x: 43.5, z: -5.2, text: 'ErContent never guards the top-left corner.' },
-  { id: 'c2', x: -1, z: 4.5, text: 'fragment 1/3   /evi' },
-  { id: 'c3', x: -46, z: 29, text: 'fragment 2/3   den' },
-  { id: 'c4', x: -24, z: -28, text: 'Under the crossbar pays 5.' },
-  { id: 'c5', x: 24, z: 27, text: 'fragment 3/3   ce/' },
+  { id: 'c1', x: 43.5, z: -5.2, kind: 'Scouting report', text: 'ErContent never guards the top-left corner.',
+    note: 'A tip for the penalties. In Shoot mode aim high and to the left: the keeper never dives there, and the top corner pays 3.' },
+  { id: 'c2', x: -1, z: 4.5, kind: 'Fragment 1 of 3', frag: 0, text: '/evi',
+    note: 'One piece of a path on this site. Two more are hidden on the grass: put the three together, in order.' },
+  { id: 'c3', x: -46, z: 29, kind: 'Fragment 2 of 3', frag: 1, text: 'den',
+    note: 'The middle piece of the path. Its neighbours are hidden somewhere else on the pitch.' },
+  { id: 'c4', x: -24, z: -28, kind: 'Scouting report', text: 'Under the crossbar pays 5.',
+    note: 'The richest shot on the pitch: right under the middle of the bar. Hard to place, worth the risk.' },
+  { id: 'c5', x: 24, z: 27, kind: 'Fragment 3 of 3', frag: 2, text: 'ce/',
+    note: 'The last piece of the path. Read the fragments in order and you have an address on this site.' },
 ];
+const FRAGS = CLUES.filter((c) => c.frag != null).sort((a, b) => a.frag - b.frag);
+const esc = (t) => String(t).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
 
 function load() {
   try { return { tu: 0, er: 0, pts: 0, clues: [], ...JSON.parse(localStorage.getItem(STORE) || '{}') }; }
   catch { return { tu: 0, er: 0, pts: 0, clues: [] }; }
 }
 
-/** Evidence bag: rendered even when the 3D pitch cannot start, so found clues never disappear. */
-function paintEvidence(list, state) {
-  list.innerHTML = CLUES.map((c) => state.clues.includes(c.id)
-    ? `<li class="found"><span>${c.id.toUpperCase()}</span>${c.text}</li>`
-    : `<li><span>${c.id.toUpperCase()}</span>████████████████</li>`).join('');
-  if (state.clues.length === CLUES.length) list.insertAdjacentHTML('beforeend', '<li class="all">All evidence collected. Put the fragments together and follow the path: <a href="evidence/">open it</a>. The terminal now answers to a new word: <code>fieldguide</code>.</li>');
+/** Evidence bag: stays empty until the five clues are logged, then shows the whole file. Rendered even without WebGL. */
+function paintEvidence(box, state) {
+  const done = CLUES.every((c) => state.clues.includes(c.id));
+  box.hidden = !done;
+  if (!done) { box.innerHTML = ''; return; }
+  const frags = FRAGS.map((c) => `<code>${esc(c.text)}</code>`).join('<i aria-hidden="true">+</i>');
+  const tips = CLUES.filter((c) => c.frag == null).map((c) => `<li><span>${c.id.toUpperCase()}</span>${esc(c.text)}</li>`).join('');
+  box.innerHTML = `<div class="ev-all">
+    <p class="ev-all-h"><b>${CLUES.length}/${CLUES.length}</b> All evidence collected.</p>
+    <p>Put the fragments together and follow the path: <a href="evidence/">open it</a>. The terminal now answers to a new word: <code>fieldguide</code>.</p>
+    <div class="ev-all-grid"><p class="ev-frags" aria-label="Fragments, in order">${frags}</p><ul class="ev-tips" aria-label="Scouting reports">${tips}</ul></div>
+  </div>`;
+}
+
+/** Evidence tag that pops up when the lens logs a clue. */
+function evidencePopup() {
+  const dlg = document.createElement('div');
+  dlg.className = 'evpop'; dlg.hidden = true;
+  dlg.setAttribute('role', 'dialog'); dlg.setAttribute('aria-modal', 'true'); dlg.setAttribute('aria-labelledby', 'evpop-text');
+  document.body.append(dlg);
+  let back = null, timer = 0;
+  const close = () => {
+    if (dlg.hidden || !dlg.classList.contains('open')) return;
+    dlg.classList.remove('open'); clearTimeout(timer);
+    timer = setTimeout(() => { dlg.hidden = true; }, REDUCED ? 0 : 260);
+    back?.focus({ preventScroll: true });
+  };
+  dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('[data-close]')) close(); });
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.stopPropagation(); close(); }
+    if (e.key === 'Tab') {
+      const f = [...dlg.querySelectorAll('button, a[href]')];
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); }
+      else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  return (c, state, from, fresh = true) => {
+    const n = state.clues.length, all = fresh && n === CLUES.length;
+    const path = c.frag == null ? '' : `<p class="evpop-path" aria-label="Path so far">${FRAGS.map((f) =>
+      state.clues.includes(f.id) ? `<code class="${f === c ? 'is-new' : ''}">${esc(f.text)}</code>` : '<code class="miss">···</code>').join('')}</p>`;
+    const time = new Date().toTimeString().slice(0, 8);
+    dlg.innerHTML = `<div class="evpop-tag${all ? ' is-all' : ''}">
+      <span class="evpop-hole" aria-hidden="true"></span>
+      <p class="evpop-head"><span>Evidence</span><b>${c.id.toUpperCase()}</b></p>
+      <p class="evpop-kind">${esc(c.kind)}</p>
+      <p class="evpop-text" id="evpop-text">${esc(c.text)}</p>
+      ${path}
+      <p class="evpop-note">${esc(c.note)}</p>
+      <dl class="evpop-meta"><div><dt>found</dt><dd>pitch ${c.x >= 0 ? '+' : ''}${c.x} / ${c.z >= 0 ? '+' : ''}${c.z}</dd></div><div><dt>${fresh ? 'logged' : 'checked'}</dt><dd>${time}</dd></div><div><dt>bag</dt><dd>${n}/${CLUES.length}</dd></div></dl>
+      ${all ? '<p class="evpop-all">All evidence collected. <a href="#st-ev-list" data-close>See the file</a></p>' : ''}
+      <button type="button" class="btn evpop-ok" data-close>Back to the pitch</button>
+      <span class="evpop-stamp" aria-hidden="true">${fresh ? 'Logged' : 'In the bag'}</span>
+    </div>`;
+    back = from; clearTimeout(timer);
+    dlg.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('open')));
+    dlg.querySelector('.evpop-ok').focus({ preventScroll: true });
+  };
 }
 
 /** WebGL is off or blocked: keep the box visible and explain how to turn it back on. */
@@ -256,6 +315,7 @@ async function boot(host) {
   new ResizeObserver(resize).observe(host);
 
   /* ---------- HUD ---------- */
+  const showEvidence = evidencePopup();
   const hud = { tu: $('#sc-tu'), er: $('#sc-er'), pts: $('#sc-pts'), ev: $('#sc-ev'), list: $('#st-ev-list') };
   const say = (msg) => typeText(call, msg, { speed: 12, caret: false });
   function paint() {
@@ -268,7 +328,7 @@ async function boot(host) {
   /* ---------- Input ---------- */
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   const lensHit = new THREE.Vector3(0, 0, 0);
-  let lensOn = false, lensX = W / 2, lensY = H / 2, dwell = { id: null, t: 0 };
+  let lensOn = false, lensX = W / 2, lensY = H / 2, dwell = { id: null, t: 0 }, shown = null;
   let aimPt = { z: 0, y: 1.2 }, aimOn = false, busy = false;
 
   const setNdc = (cx, cy) => { const r = cv.getBoundingClientRect(); ndc.set(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1); return r; };
@@ -422,24 +482,27 @@ async function boot(host) {
       renderer.autoClear = false;
       renderer.render(overlay, ocam);
       renderer.autoClear = true;
-      // dwell on a clue to log it as found
+      // dwell on a clue: a new one is logged, one already in the bag shows its tag again
       let near = null;
       for (const [i, c] of CLUES.entries()) {
-        if (state.clues.includes(c.id)) continue;
         tmp.set(c.x, 0, c.z);
         if (tmp.distanceTo(lensHit) < 3.2) { near = i; break; }
       }
-      if (near === null) { dwell = { id: null, t: 0 }; lensBox.classList.remove('hot'); }
+      if (near !== shown) shown = null; // the lens left the last tag's clue: it may open again later
+      if (near === null || near === shown) { dwell = { id: null, t: 0 }; lensBox.classList.remove('hot'); }
       else if (dwell.id !== near) { dwell = { id: near, t: now }; lensBox.classList.add('hot'); }
       else if (now - dwell.t > 650) {
-        const c = CLUES[near];
-        state.clues.push(c.id); save();
-        clueMeshes[near].layers.enable(0);
+        const c = CLUES[near], fresh = !state.clues.includes(c.id);
+        if (fresh) {
+          state.clues.push(c.id); save();
+          clueMeshes[near].layers.enable(0);
+          paint();
+          say(state.clues.length === CLUES.length ? 'All evidence collected. The path is in the fragments.' : `Evidence logged: ${c.id.toUpperCase()}. ${CLUES.length - state.clues.length} left on the pitch.`);
+        }
         lensBox.classList.remove('hot');
-        paint();
-        say(state.clues.length === CLUES.length ? 'All evidence collected. The path is in the fragments.' : `Evidence logged: ${c.id.toUpperCase()}. ${CLUES.length - state.clues.length} left on the pitch.`);
-        host.classList.remove('found'); void host.offsetWidth; host.classList.add('found');
-        dwell = { id: null, t: 0 };
+        dwell = { id: null, t: 0 }; shown = near;
+        lensOn = false; lensBox.classList.remove('on');
+        showEvidence(c, state, cv, fresh);
       }
     }
     if (visible) raf = requestAnimationFrame(loop);

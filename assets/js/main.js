@@ -406,20 +406,35 @@ function profile() {
   linkify($('#fields'));
 }
 
-/* ---------- Board: link analysis graph ---------- */
+/* ---------- Board: investigation wall ---------- */
+// Each sheet is pinned by a magnet at (x, y), in % of the wall; the sheet hangs from it. `wide` and `narrow` are the two default layouts.
+const ICONS = {
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  pin: '<path d="M12 22s7-7.2 7-12a7 7 0 0 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+  print: '<path d="M6 10a6 6 0 0 1 12 0v3"/><path d="M9 21c.8-2 1-4 1-6v-5a2 2 0 0 1 4 0v4"/><path d="M14 18c-.3 1.2-.7 2.3-1.2 3.2"/><path d="M6 14c0 2-.4 3.6-1 5"/><path d="M18 16c0 1.6-.2 3-.6 4.3"/>',
+  team: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 14.5c3 0 6 1.8 6 5"/>',
+  book: '<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-4a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h5z"/>',
+  net: '<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 7l3.5 3.5M7 17l3.5-3.5M13.5 10.5 17 7M13.5 13.5 17 17"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0"/>',
+  bug: '<rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V4M9 4l1.5 2M15 4l-1.5 2M8 11H4M8 15H4M16 11h4M16 15h4M9 19l-2 2M15 19l2 2"/>',
+  shield: '<path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  layers: '<path d="M12 3 2 8l10 5 10-5z"/><path d="M2 13l10 5 10-5"/>',
+  code: '<path d="M8 6 2 12l6 6M16 6l6 6-6 6M14 4l-4 16"/>',
+};
 const NODES = [
-  { id: 'osint', label: 'OSINT', x: 470, y: 300, hub: true, tags: [], text: 'Open-source intelligence: names, accounts, photos and places, cross-checked until the story holds. It’s also the first phase of every red team engagement I run.', link: ['#cases', 'Try the open cases'] },
-  { id: 'geoint', label: 'GEOINT', x: 230, y: 140, tags: [], text: 'Geolocation from what a picture gives away: skylines, shadows, signs, road markings. The cases on this site lean on it.', link: ['#cases', 'Find Marek'] },
-  { id: 'forensics', label: 'Forensics', x: 190, y: 410, tags: [], text: 'Files remember more than their owners think: metadata, timestamps, artifacts. My other half in CTFs.' },
-  { id: 'napwnli', label: 'napwnli', x: 360, y: 545, tags: [], text: 'The CTF team of the University of Naples Federico II. I play OSINT and forensics.', link: ['#matchday', 'See the formation'] },
-  { id: 'teach', label: 'Teaching', x: 100, y: 270, tags: ['teach'], text: 'CyberChallenge.IT tutor for the Naples team, co-supervisor of 20 theses and author of a book for public competitions.' },
-  { id: 'ml', label: 'ML robustness', x: 480, y: 80, tags: ['ml'], text: 'How anomaly detection models hold up when an attacker poisons the training data.' },
-  { id: 'redteam', label: 'Red teaming', x: 700, y: 150, tags: [], text: 'End-to-end red team operations and targeted phishing campaigns, where OSINT decides who gets the email.' },
-  { id: 'pentest', label: 'Pentest', x: 885, y: 270, tags: [], text: 'Internal, external and web application testing against the OWASP Top 10. Vulnerability assessment with Nessus and OpenVAS, reported by priority.' },
-  { id: 'apt', label: 'APT emulation', x: 700, y: 370, tags: [], text: 'Generative models and LLMs that produce synthetic attack data for adversary emulation, from my research fellowship at Federico II.' },
-  { id: 'hardening', label: 'Hardening', x: 875, y: 490, tags: [], text: 'Windows, Linux and Docker hardening, endpoint protection policies and data loss prevention tuning.' },
-  { id: 'sbd', label: 'Security by design', x: 650, y: 555, tags: ['sbd'], text: 'Security-by-design for GENIO, an edge cloud platform on GPON telco networks.' },
-  { id: 'aicode', label: 'AI-generated code', x: 455, y: 445, tags: ['aicode'], text: 'Can we trust code written by AI in security contexts? My master’s thesis and a Q1 journal paper on how to test it.' },
+  { id: 'osint', label: 'OSINT', hub: true, sheet: 'hub', icon: 'eye', kind: 'Where it starts', wide: [40, 33], narrow: [50, 1.5], tags: [], text: 'Open-source intelligence: names, accounts, photos and places, cross-checked until the story holds. It’s also the first phase of every red team engagement I run.', link: ['#cases', 'Try the open cases'] },
+  { id: 'geoint', label: 'GEOINT', sheet: 'photo', icon: 'pin', kind: 'Geolocation', wide: [33, 5], narrow: [27, 16], tags: [], text: 'Geolocation from what a picture gives away: skylines, shadows, signs, road markings. The cases on this site lean on it.', link: ['#cases', 'Find Marek'] },
+  { id: 'forensics', label: 'Forensics', sheet: 'card', icon: 'print', kind: 'Artifacts', wide: [14, 40], narrow: [73, 16.5], tags: [], text: 'Files remember more than their owners think: metadata, timestamps, artifacts. My other half in CTFs.' },
+  { id: 'napwnli', label: 'napwnli', sheet: 'photo', icon: 'team', kind: 'CTF team', wide: [12, 72], narrow: [27, 30], tags: [], text: 'The CTF team of the University of Naples Federico II. I play OSINT and forensics.', link: ['#matchday', 'See the formation'] },
+  { id: 'teach', label: 'Teaching', sheet: 'sticky', icon: 'book', kind: 'Tutor · author', wide: [11, 9], narrow: [73, 30.5], tags: ['teach'], text: 'CyberChallenge.IT tutor for the Naples team, co-supervisor of 20 theses and author of a book for public competitions.' },
+  { id: 'ml', label: 'ML robustness', sheet: 'clip', icon: 'net', kind: 'Research', wide: [58, 8], narrow: [50, 86], tags: ['ml'], text: 'How anomaly detection models hold up when an attacker poisons the training data.' },
+  { id: 'redteam', label: 'Red teaming', sheet: 'folder', icon: 'target', kind: 'Operations', wide: [84, 5], narrow: [27, 44], tags: [], text: 'End-to-end red team operations and targeted phishing campaigns, where OSINT decides who gets the email.' },
+  { id: 'pentest', label: 'Pentest', sheet: 'card', icon: 'lock', kind: 'Assessments', wide: [88, 38], narrow: [73, 44.5], tags: [], text: 'Internal, external and web application testing against the OWASP Top 10. Vulnerability assessment with Nessus and OpenVAS, reported by priority.' },
+  { id: 'apt', label: 'APT emulation', sheet: 'clip', icon: 'bug', kind: 'Research fellowship', wide: [64, 41], narrow: [27, 58], tags: [], text: 'Generative models and LLMs that produce synthetic attack data for adversary emulation, from my research fellowship at Federico II.' },
+  { id: 'hardening', label: 'Hardening', sheet: 'card', icon: 'shield', kind: 'Defence', wide: [87, 73], narrow: [73, 58.5], tags: [], text: 'Windows, Linux and Docker hardening, endpoint protection policies and data loss prevention tuning.' },
+  { id: 'sbd', label: 'Security by design', sheet: 'folder', icon: 'layers', kind: 'GENIO project', wide: [62, 72], narrow: [27, 72], tags: ['sbd'], text: 'Security-by-design for GENIO, an edge cloud platform on GPON telco networks.' },
+  { id: 'aicode', label: 'AI-generated code', sheet: 'sticky', icon: 'code', kind: 'Thesis · Q1 paper', wide: [36, 75], narrow: [73, 72.5], tags: ['aicode'], text: 'Can we trust code written by AI in security contexts? My master’s thesis and a Q1 journal paper on how to test it.' },
 ];
 const EDGES = [
   ['osint', 'geoint'], ['osint', 'forensics'], ['osint', 'redteam'], ['osint', 'napwnli'], ['osint', 'apt'],
@@ -427,76 +442,150 @@ const EDGES = [
   ['redteam', 'pentest'], ['redteam', 'apt'], ['pentest', 'hardening'], ['hardening', 'sbd'],
   ['sbd', 'aicode'], ['aicode', 'ml'], ['ml', 'apt'], ['aicode', 'teach'],
 ];
+const BOARD_STORE = 'board.v1';
 
 function board() {
-  const svg = $('#board-svg'), note = $('#board-note'), exhibits = $('.exhibits');
+  const wall = $('#wall'), svg = $('#wall-strings'), mags = $('#wall-magnets'), note = $('#board-note'), exhibits = $('.exhibits');
+  if (!wall) return;
   const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
-  const gStr = svgEl('g', {}, svg), gPk = svgEl('g', {}, svg), gNodes = svgEl('g', {}, svg);
-  const edgeEls = EDGES.map(([a, b]) => {
-    const A = byId[a], B = byId[b];
-    const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2 + 18 + Math.hypot(B.x - A.x, B.y - A.y) * 0.05;
-    const p = svgEl('path', { class: 'string', d: `M${A.x},${A.y} Q${mx},${my} ${B.x},${B.y}` }, gStr);
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  $('#board-help').textContent = coarse
+    ? 'Tap a sheet to open its file. Hold it, then drag: a magnet pins it wherever you let go.'
+    : 'Click a sheet to open its file. Drag it anywhere: a magnet pins it wherever you let go. Arrow keys move the focused sheet.';
+
+  // stable small tilt per sheet, so the default wall looks hand-pinned but never changes between visits
+  const tiltOf = (id) => { let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0; return ((Math.abs(h) % 70) / 10) - 3.5; };
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(BOARD_STORE) || '{}') || {}; } catch { saved = {}; }
+  const persist = () => { try { localStorage.setItem(BOARD_STORE, JSON.stringify(saved)); } catch { /* private mode */ } };
+
+  /* ---------- build ---------- */
+  const sheets = {}, magnets = {}, pos = {};
+  NODES.forEach((n, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `sheet sh-${n.sheet}`;
+    b.dataset.id = n.id;
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-describedby', 'board-help');
+    b.innerHTML = `<span class="sh-no">No. ${String(i + 1).padStart(2, '0')}</span>`
+      + `<span class="sh-ico" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONS[n.icon]}</svg></span>`
+      + `<span class="sh-title">${n.label}</span><span class="sh-kind">${n.kind}</span>`
+      + (n.hub ? '<span class="sh-stamp" aria-hidden="true">Primary</span>' : '');
+    b.style.setProperty('--d', `${i * 60}ms`);
+    wall.append(b); sheets[n.id] = b;
+    const m = document.createElement('span');
+    m.className = `magnet${n.hub ? ' hub' : ''}`;
+    m.style.setProperty('--d', `${i * 60 + 260}ms`);
+    mags.append(m); magnets[n.id] = m;
+  });
+  const strings = EDGES.map(([a, b]) => {
+    const p = svgEl('path', { class: 'string' }, svg);
     p.dataset.a = a; p.dataset.b = b;
     return p;
   });
-  NODES.forEach((n) => {
-    const g = svgEl('g', { class: `node${n.hub ? ' hub' : ''}`, tabindex: 0, role: 'button', 'aria-pressed': 'false', 'aria-label': n.label }, gNodes);
-    g.dataset.id = n.id;
-    const rect = svgEl('rect', { y: n.y - (n.hub ? 30 : 24), height: n.hub ? 60 : 48, rx: 2 }, g);
-    const t = svgEl('text', { x: n.x, y: n.y + (n.hub ? 9 : 7), 'text-anchor': 'middle' }, g);
-    t.textContent = n.label;
-    if (n.hub) t.style.fontSize = '28px';
-    const w = t.getComputedTextLength() + 40;
-    rect.setAttribute('x', n.x - w / 2); rect.setAttribute('width', w);
-    const halo = svgEl('rect', { class: 'halo', x: n.x - w / 2, y: n.y - (n.hub ? 30 : 24), width: w, height: n.hub ? 60 : 48 }, g);
-    g.insertBefore(halo, rect);
-    svgEl('circle', { class: 'pin', cx: n.x - w / 2, cy: n.y - (n.hub ? 30 : 24), r: 5 }, g);
-  });
 
-  // draw-in: strings unroll, nodes appear in sequence
-  edgeEls.forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = REDUCED ? 0 : L; p.dataset.len = L; });
-  const nodesEls = $$('.node', gNodes);
-  if (!REDUCED) nodesEls.forEach((g) => { g.style.opacity = 0; });
-  onView(svg, () => {
-    nodesEls.forEach((g, i) => { g.style.transition = `opacity .5s ${i * 70}ms`; g.style.opacity = ''; });
-    edgeEls.forEach((p, i) => { p.style.transition = `stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1) ${300 + i * 70}ms`; p.style.strokeDashoffset = 0; });
-    if (!REDUCED) setTimeout(packets, 1500);
-  });
+  /* ---------- layout ---------- */
+  let layout = '';
+  let order = [...NODES.filter((n) => !n.hub), ...NODES.filter((n) => n.hub)].map((n) => n.id); // stacking order, last on top
+  const restack = () => order.forEach((id, i) => { sheets[id].style.zIndex = i + 1; });
+  restack();
 
-  // data packets running on the strings
-  function packets() {
-    const pk = edgeEls.map((p) => ({ p, t: Math.random(), v: 0.0025 + Math.random() * 0.003, c: svgEl('circle', { class: 'packet', r: 2.6 }, gPk) }));
-    let vis = true, id = 0;
-    // id guards against a second loop when the board leaves and re-enters view between two frames
-    new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis && !id) id = requestAnimationFrame(run); }).observe(svg);
-    function run() {
-      id = 0;
-      for (const k of pk) {
-        k.t = (k.t + k.v) % 1;
-        const pt = k.p.getPointAtLength(k.t * +k.p.dataset.len);
-        k.c.setAttribute('cx', pt.x); k.c.setAttribute('cy', pt.y);
-        k.c.style.opacity = svg.classList.contains('has-active') && !k.p.classList.contains('is-linked') ? 0 : 1;
-      }
-      if (vis) id = requestAnimationFrame(run);
+  const place = (id) => {
+    const p = pos[id], s = sheets[id].style, m = magnets[id].style;
+    s.setProperty('--x', `${p.x}%`); s.setProperty('--y', `${p.y}%`); s.setProperty('--r', `${p.r}deg`);
+    m.setProperty('--x', `${p.x}%`); m.setProperty('--y', `${p.y}%`);
+  };
+  // keep each sheet fully on the wall: the magnet is 14px below the sheet's top edge
+  const clamp = (id, x, y) => {
+    const W = wall.clientWidth, H = wall.clientHeight, el = sheets[id];
+    const hw = el.offsetWidth / 2 + 8, top = 22, bottom = el.offsetHeight - 14 + 10;
+    return {
+      x: Math.min(Math.max(x, (hw / W) * 100), 100 - (hw / W) * 100),
+      y: Math.min(Math.max(y, (top / H) * 100), 100 - (bottom / H) * 100),
+    };
+  };
+  const draw = () => {
+    const W = wall.clientWidth, H = wall.clientHeight;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    for (const p of strings) {
+      const A = pos[p.dataset.a], B = pos[p.dataset.b];
+      const ax = (A.x / 100) * W, ay = (A.y / 100) * H, bx = (B.x / 100) * W, by = (B.y / 100) * H;
+      const sag = 10 + Math.hypot(bx - ax, by - ay) * 0.07;
+      p.setAttribute('d', `M${ax.toFixed(1)},${ay.toFixed(1)} Q${((ax + bx) / 2).toFixed(1)},${((ay + by) / 2 + sag).toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)}`);
     }
+  };
+  const applyLayout = () => {
+    const next = wall.clientWidth < 640 ? 'narrow' : 'wide';
+    wall.classList.toggle('is-narrow', next === 'narrow');
+    if (next !== layout) {
+      layout = next;
+      const mine = saved[layout] || {};
+      for (const n of NODES) {
+        const [x, y, r] = mine[n.id] || [...n[layout], tiltOf(n.id)];
+        pos[n.id] = { x, y, r };
+      }
+    }
+    for (const n of NODES) { Object.assign(pos[n.id], clamp(n.id, pos[n.id].x, pos[n.id].y)); place(n.id); }
+    draw();
+  };
+  applyLayout();
+  new ResizeObserver(() => applyLayout()).observe(wall);
+
+  const store = (id) => {
+    const p = pos[id];
+    (saved[layout] ||= {})[id] = [+p.x.toFixed(2), +p.y.toFixed(2), +p.r.toFixed(1)];
+    persist();
+  };
+  // the magnet snaps down: bounce, then a ring spreads over the wall
+  const clack = (id) => {
+    const m = magnets[id];
+    m.classList.remove('lifted', 'clack'); void m.offsetWidth; m.classList.add('clack');
+    if (REDUCED) return;
+    const ring = document.createElement('span');
+    ring.className = 'mag-ring';
+    ring.style.setProperty('--x', `${pos[id].x}%`); ring.style.setProperty('--y', `${pos[id].y}%`);
+    mags.append(ring);
+    ring.addEventListener('animationend', () => ring.remove());
+  };
+
+  /* ---------- intro: sheets drop on the wall, magnets clack, strings unroll ---------- */
+  if (!REDUCED) {
+    wall.classList.add('pre');
+    onView(wall, () => {
+      wall.classList.remove('pre'); wall.classList.add('in');
+      strings.forEach((p, i) => {
+        const L = p.getTotalLength();
+        p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+        p.getBoundingClientRect();
+        p.style.transition = `stroke-dashoffset 1s var(--ease) ${900 + i * 55}ms`;
+        p.style.strokeDashoffset = 0;
+        setTimeout(() => { p.style.transition = ''; p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; }, 2100 + i * 55);
+      });
+      setTimeout(() => wall.classList.remove('in'), 2400);
+    }, { threshold: 0.2 });
   }
 
+  /* ---------- selection ---------- */
   const DEFAULT = note.innerHTML;
   let active = null;
   const select = (id) => {
     active = active === id ? null : id;
-    svg.classList.toggle('has-active', !!active);
+    wall.classList.toggle('has-active', !!active);
     const linked = new Set(active ? [active] : []);
-    edgeEls.forEach((e) => {
+    strings.forEach((e) => {
       const on = active && (e.dataset.a === active || e.dataset.b === active);
       e.classList.toggle('is-linked', !!on);
       if (on) { linked.add(e.dataset.a); linked.add(e.dataset.b); }
     });
-    nodesEls.forEach((g) => {
-      g.classList.toggle('is-linked', linked.has(g.dataset.id));
-      g.classList.toggle('is-active', g.dataset.id === active);
-      g.setAttribute('aria-pressed', String(g.dataset.id === active));
-    });
+    for (const n of NODES) {
+      const on = n.id === active;
+      sheets[n.id].classList.toggle('is-linked', linked.has(n.id));
+      sheets[n.id].classList.toggle('is-active', on);
+      sheets[n.id].setAttribute('aria-pressed', String(on));
+      magnets[n.id].classList.toggle('is-linked', linked.has(n.id));
+    }
+    if (active) { order = [...order.filter((x) => x !== active), active]; restack(); }
     const tags = active ? byId[active].tags : [];
     exhibits.classList.toggle('is-filtered', tags.length > 0);
     $$('li', exhibits).forEach((li) => li.classList.toggle('is-hit', tags.includes(li.dataset.tags)));
@@ -504,13 +593,102 @@ function board() {
     if (!active) { note.innerHTML = DEFAULT; return; }
     const n = byId[active];
     const exIds = $$('li.is-hit .ex-id', exhibits).map((e) => e.textContent);
-    note.innerHTML = `<h3>${n.label}</h3><p>${n.text}</p>
+    note.innerHTML = `<p class="note-no">File No. ${String(NODES.indexOf(n) + 1).padStart(2, '0')} · ${n.kind}</p><h3>${n.label}</h3><p>${n.text}</p>
       ${exIds.length ? `<p><strong>evidence →</strong> exhibit${exIds.length > 1 ? 's' : ''} ${exIds.join(', ')}</p>` : ''}
       ${n.link ? `<p><a href="${n.link[0]}">${n.link[1]}</a></p>` : ''}`;
     scramble(note.querySelector('h3'), { duration: 450 });
   };
-  gNodes.addEventListener('click', (e) => { const g = e.target.closest('.node'); if (g) select(g.dataset.id); });
-  gNodes.addEventListener('keydown', (e) => { const g = e.target.closest('.node'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(g.dataset.id); } });
+
+  /* ---------- drag: mouse at once, touch after a short hold so the page still scrolls ---------- */
+  let drag = null, justDragged = 0;
+  const lift = (d) => {
+    d.on = true;
+    order = [...order.filter((x) => x !== d.id), d.id]; restack();
+    sheets[d.id].classList.add('lifted'); magnets[d.id].classList.add('lifted'); wall.classList.add('dragging');
+    if (d.touch) navigator.vibrate?.(8);
+  };
+  const drop = (d) => {
+    const el = sheets[d.id];
+    el.classList.remove('lifted'); el.style.setProperty('--sw', '0deg'); wall.classList.remove('dragging');
+    // magnetic snap to a 1% grid, and a fresh small tilt as it settles
+    const p = pos[d.id];
+    Object.assign(p, clamp(d.id, Math.round(p.x), Math.round(p.y)), { r: Math.round((Math.random() * 6 - 3) * 10) / 10 });
+    place(d.id); draw(); store(d.id); clack(d.id);
+    justDragged = performance.now();
+  };
+  const end = () => {
+    if (!drag) return;
+    clearTimeout(drag.timer);
+    const d = drag; drag = null;
+    if (d.on) drop(d);
+  };
+  wall.addEventListener('pointerdown', (e) => {
+    const el = e.target.closest('.sheet');
+    if (!el || e.button > 0 || drag) return;
+    const id = el.dataset.id, r = wall.getBoundingClientRect();
+    drag = { id, el, touch: e.pointerType !== 'mouse', sx: e.clientX, sy: e.clientY, lx: e.clientX, on: false,
+      ox: e.clientX - r.left - (pos[id].x / 100) * r.width, oy: e.clientY - r.top - (pos[id].y / 100) * r.height };
+    el.setPointerCapture?.(e.pointerId);
+    if (drag.touch) drag.timer = setTimeout(() => { if (drag && !drag.on) lift(drag); }, 280);
+  });
+  wall.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const moved = Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy);
+    if (!drag.on) {
+      if (drag.touch) { if (moved > 10) { clearTimeout(drag.timer); drag = null; } return; } // a scroll, not a drag
+      if (moved < 5) return;
+      lift(drag);
+    }
+    const r = wall.getBoundingClientRect(), p = pos[drag.id];
+    Object.assign(p, clamp(drag.id, ((e.clientX - r.left - drag.ox) / r.width) * 100, ((e.clientY - r.top - drag.oy) / r.height) * 100));
+    // the sheet swings from its magnet against the direction of travel
+    const vx = e.clientX - drag.lx; drag.lx = e.clientX;
+    drag.el.style.setProperty('--sw', `${Math.max(-16, Math.min(16, -vx * 1.4))}deg`);
+    place(drag.id); draw();
+  });
+  wall.addEventListener('pointerup', end);
+  wall.addEventListener('pointercancel', end);
+  wall.addEventListener('lostpointercapture', end);
+  // while a sheet is held, the finger moves the sheet, not the page
+  wall.addEventListener('touchmove', (e) => { if (drag?.on) e.preventDefault(); }, { passive: false });
+  wall.addEventListener('contextmenu', (e) => { if (e.target.closest('.sheet')) e.preventDefault(); });
+
+  wall.addEventListener('click', (e) => {
+    const el = e.target.closest('.sheet');
+    if (performance.now() - justDragged < 400) return; // the click that ends a drag
+    if (el) select(el.dataset.id);
+    else if (active) select(active);
+  });
+  wall.addEventListener('keydown', (e) => {
+    const el = e.target.closest('.sheet');
+    if (!el) return;
+    if (e.key === 'Escape' && active) { e.preventDefault(); select(active); return; }
+    const step = e.shiftKey ? 5 : 1, d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const id = el.dataset.id, p = pos[id];
+    Object.assign(p, clamp(id, p.x + d[0], p.y + d[1]));
+    place(id); draw(); store(id); clack(id);
+  });
+
+  $('#wall-reset').addEventListener('click', () => {
+    delete saved[layout]; persist();
+    // glide every sheet home; strings follow frame by frame
+    const from = Object.fromEntries(NODES.map((n) => [n.id, { ...pos[n.id] }]));
+    const to = Object.fromEntries(NODES.map((n) => [n.id, { ...clamp(n.id, n[layout][0], n[layout][1]), r: tiltOf(n.id) }]));
+    const t0 = performance.now(), dur = REDUCED ? 0 : 700;
+    const step = (now) => {
+      const k = dur ? Math.min(1, (now - t0) / dur) : 1, e = 1 - (1 - k) ** 3;
+      for (const n of NODES) {
+        const a = from[n.id], b = to[n.id];
+        pos[n.id] = { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e, r: a.r + (b.r - a.r) * e };
+        place(n.id);
+      }
+      draw();
+      if (k < 1) requestAnimationFrame(step); else NODES.forEach((n) => clack(n.id));
+    };
+    requestAnimationFrame(step);
+  });
 }
 
 /* ---------- Matchday ---------- */

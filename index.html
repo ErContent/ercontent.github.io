@@ -145,9 +145,9 @@
   <div class="wrap">
     <div class="st-ev-head">
       <h3>Evidence bag</h3>
-      <p>Five clues are hidden on the grass, invisible to the naked eye. Each slot fills up when you hold the lens over one. Some help you beat ErContent, others point somewhere else.</p>
+      <p>Five clues are hidden on the grass, invisible to the naked eye. Hold the lens over one and an evidence tag tells you what it means. Some help you beat ErContent, others point somewhere else. Log all five to open the file.</p>
     </div>
-    <ol class="st-ev" id="st-ev-list" aria-label="Evidence found on the pitch"></ol>
+    <div class="st-ev" id="st-ev-list" aria-live="polite" hidden></div>
   </div>
 </section>
 
@@ -156,14 +156,18 @@
   <div class="sec-bg bg-board" aria-hidden="true" data-depth="0.06"><svg class="bg-strings" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#E5383B" stroke-width="1.5"><path d="M80,120 Q210.0,130.0 340,60"/><path d="M340,60 Q480.0,160.0 620,180"/><path d="M620,180 Q760.0,175.0 900,90"/><path d="M900,90 Q1040.0,190.0 1180,210"/><path d="M80,120 Q140.0,310.0 200,420"/><path d="M200,420 Q360.0,440.0 520,380"/><path d="M520,380 Q570.0,320.0 620,180"/><path d="M520,380 Q690.0,460.0 860,460"/><path d="M860,460 Q990.0,470.0 1120,400"/><path d="M1120,400 Q1150.0,345.0 1180,210"/><path d="M1180,210 Q1270.0,295.0 1360,300"/><path d="M860,460 Q880.0,315.0 900,90"/><path d="M340,60 Q430.0,260.0 520,380"/></g><g fill="#E5383B"><circle cx="80" cy="120" r="3.5"/><circle cx="340" cy="60" r="3.5"/><circle cx="620" cy="180" r="3.5"/><circle cx="900" cy="90" r="3.5"/><circle cx="1180" cy="210" r="3.5"/><circle cx="200" cy="420" r="3.5"/><circle cx="520" cy="380" r="3.5"/><circle cx="860" cy="460" r="3.5"/><circle cx="1120" cy="400" r="3.5"/><circle cx="1360" cy="300" r="3.5"/></g></svg></div>
   <div class="wrap">
     <header class="section-head reveal">
-      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="graph --render links.board">graph --render links.board</span></p>
+      <p class="cmd" aria-hidden="true"><span class="prompt">$</span> <span data-type="board --pin sheets.all">board --pin sheets.all</span></p>
       <h2 id="board-title" class="scramble">The board</h2>
-      <p class="section-sub">Link analysis of what I do. Pick a node to follow the strings and the evidence behind it.</p>
+      <p class="section-sub">My investigation board. Every sheet is something I do or have done: open one to read the file and follow the strings to the evidence behind it.</p>
     </header>
     <div class="board-layout reveal">
       <div class="board-frame">
-        <svg id="board-svg" class="board" viewBox="0 0 1000 620" role="group" aria-label="Link analysis graph of skills and research"></svg>
-        <span class="frame-tag" aria-hidden="true">nodes 12 / links 17</span>
+        <div class="wall" id="wall" role="group" aria-label="Investigation board: one sheet for each thing I do or have done" aria-describedby="board-help">
+          <svg class="wall-strings" id="wall-strings" aria-hidden="true"></svg>
+          <div class="wall-magnets" id="wall-magnets" aria-hidden="true"></div>
+        </div>
+        <div class="wall-bar"><p id="board-help">Click a sheet to open its file. Drag it anywhere: a magnet pins it wherever you let go.</p><button type="button" class="wall-reset" id="wall-reset">Reset the board</button></div>
+        <span class="frame-tag" aria-hidden="true">sheets 12 / strings 17</span>
       </div>
       <aside class="board-note" id="board-note" aria-live="polite">
         <h3>Start anywhere</h3>
